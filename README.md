@@ -6,13 +6,15 @@ Web/Android service that allows users to record their daily emotions and memorab
 ## Python version
 3.5.2
 
-## PIP installed packages
+## PIP installs packages
 #### Check requirements.txt
 appdirs==1.4.3
 awscli==1.11.72
+boto3==1.4.4
 botocore==1.5.35
 colorama==0.3.7
 Django==1.10.6
+django-storages==1.5.2
 djangorestframework==3.6.2
 docutils==0.13.1
 jmespath==0.9.2
