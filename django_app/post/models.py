@@ -16,7 +16,7 @@ class Mood(models.Model):
     )
 
     created_date = models.DateTimeField(auto_now_add=True)
-    mood_chk = models.IntegerField(choices=MOOD_CHOICE, max_length=100)
+    mood_chk = models.IntegerField(choices=MOOD_CHOICE)
     mood_comment = models.CharField(max_length=400)
 
     class Meta:
