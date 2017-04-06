@@ -15,6 +15,11 @@ import os
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('MODE') == 'DEBUG'
 STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
+DB_RDS = os.environ.get('DB') == 'RDS'
+
+print('DEBUG: {}'.format(DEBUG))
+print('STORAGE_S3: {}'.format(STORAGE_S3))
+print('DB: {}'.format(DB_RDS))
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -41,6 +46,10 @@ for key, key_dict in config_common.items():
 AWS_ACCESS_KEY_ID = config['aws']['access_key_id']
 AWS_SECRET_ACCESS_KEY = config['aws']['secret_access_key']
 AWS_STORAGE_BUCKET_NAME = config['aws']['s3_storage_bucket_name']
+AWS_S3_CUSTOM_DOMAIN = 's3.{region}.amazonaws.com/{bucket_name}'.format(
+    region=config['aws']['s3_region'],
+    bucket_name=AWS_STORAGE_BUCKET_NAME
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
@@ -53,11 +62,19 @@ STATICFILES_DIRS = (
 )
 
 if STORAGE_S3:
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    STATIC_URL = 's3.{region}.amazonaws.com/{bucket_name}/'.format(
-        region=config['aws']['s3_region'],
-        bucket_name=config['aws']['s3_storage_bucket_name']
+    # Static files
+    STATICFILES_STORAGE = 'config.storages.StaticStorage'
+    STATICFILES_LOCATION = 'static'
+    STATIC_URL = 'https://{custom_domain}/{staticfiles_location}/'.format(
+        custom_domain=AWS_S3_CUSTOM_DOMAIN,
+        staticfiles_location=STATICFILES_LOCATION
+    )
+    # Media files
+    DEFAULT_FILE_STORAGE = 'config.storages.MediaStorage'
+    MEDIAFILES_LOCATION = 'media'
+    MEDIA_URL = 'https://{custom_domain}/{mediafiles_location}/'.format(
+        custom_domain=AWS_S3_CUSTOM_DOMAIN,
+        mediafiles_location=MEDIAFILES_LOCATION
     )
 else:
     STATIC_ROOT = os.path.join(ROOT_DIR, 'static_root')
@@ -140,14 +157,19 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+if DEBUG and DB_RDS:
+    config_db = config['db_rds']
+else:
+    config_db = config['db']
+
 DATABASES = {
     'default': {
-        'ENGINE': config['db']['engine'],
-        'NAME': config['db']['name'],
-        'USER': config['db']['user'],
-        'PASSWORD': config['db']['password'],
-        'HOST': config['db']['host'],
-        'PORT': config['db']['port'],
+        'ENGINE': config_db['engine'],
+        'NAME': config_db['name'],
+        'USER': config_db['user'],
+        'PASSWORD': config_db['password'],
+        'HOST': config_db['host'],
+        'PORT': config_db['port'],
     }
 }
 
