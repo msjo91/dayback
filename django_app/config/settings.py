@@ -162,20 +162,14 @@ if DEBUG and DB_RDS:
 else:
     config_db = config['db']
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': config_db['engine'],
-#         'NAME': config_db['name'],
-#         'USER': config_db['user'],
-#         'PASSWORD': config_db['password'],
-#         'HOST': config_db['host'],
-#         'PORT': config_db['port'],
-#     }
-# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': config_db['engine'],
+        'NAME': config_db['name'],
+        'USER': config_db['user'],
+        'PASSWORD': config_db['password'],
+        'HOST': config_db['host'],
+        'PORT': config_db['port'],
     }
 }
 
