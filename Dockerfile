@@ -15,12 +15,12 @@ RUN         pip3 install --upgrade setuptools
 RUN         pip3 install -r requirements.txt
 RUN         pip3 install uwsgi
 
-COPY        .conf-secret/uwsgi-app.ini          /etc/uwsgi/sites/app.ini
-COPY        .conf-secret/nginx.conf             /etc/nginx/nginx.conf
-COPY        .conf-secret/nginx-app.conf         /etc/nginx/sites-available/app.conf
-COPY        .conf-secret/supervisor-app.conf    /etc/supervisor/conf.d/
+COPY        ~/projects/django/dayback/.conf-secret/uwsgi-app.ini    /etc/uwsgi/sites/app.ini
+COPY        ~/projects/django/dayback/.conf-secret/nginx.conf   /etc/nginx/nginx.conf
+COPY        ~/projects/django/dayback/.conf-secret/nginx-app.conf   /etc/nginx/sites-available/app.conf
+COPY        ~/projects/django/dayback/.conf-secret/supervisor-app.conf  /etc/supervisor/conf.d/
 
-RUN         ln -s /etc/nginx/sites-available/app.conf /etc/nginx/sites-enabled/app.conf
+RUN         ln -s /etc/nginx/sites-available/app.conf   /etc/nginx/sites-enabled/app.conf
 
 EXPOSE      4040
 CMD         supervisord -n
