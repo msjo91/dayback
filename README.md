@@ -9,9 +9,9 @@ Web/Android service that allows users to record their daily emotions and memorab
 ## PIP installs packages
 #### Check requirements.txt
 appdirs==1.4.3
-awscli==1.11.73
+awscli==1.11.74
 boto3==1.4.4
-botocore==1.5.36
+botocore==1.5.37
 colorama==0.3.7
 Django==1.11
 django-storages==1.5.2
