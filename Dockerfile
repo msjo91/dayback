@@ -1,8 +1,20 @@
-FROM        dayback-base
+FROM        ubuntu:16.04
 MAINTAINER  msjo91@gmail.com
+
+RUN         apt-get -y update
+RUN         apt-get -y install python3
+RUN         apt-get -y install python3-pip
+RUN         apt-get -y install nginx
+RUN         apt-get -y install supervisor
 
 COPY        . /srv/app
 WORKDIR     /srv/app
+
+RUN         pip3 install --upgrade pip
+RUN         pip3 install --upgrade setuptools
+RUN         pip3 install django
+RUN         pip3 install uwsgi
+RUN         pip3 install -r requirements.txt
 
 COPY        .conf-secret/uwsgi-app.ini          /etc/uwsgi/sites/app.ini
 COPY        .conf-secret/nginx.conf             /etc/nginx/nginx.conf
