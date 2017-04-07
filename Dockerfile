@@ -25,4 +25,4 @@ RUN         ln -s /etc/nginx/sites-available/app.conf   /etc/nginx/sites-enabled
 EXPOSE      4040
 CMD         supervisord -n
 
-# docker build . -t dayback
+# docker build . -t dayback-dock
