@@ -23,6 +23,6 @@ COPY        .conf-secret/supervisor-app.conf    /etc/supervisor/conf.d/
 RUN         ln -s /etc/nginx/sites-available/app.conf /etc/nginx/sites-enabled/app.conf
 
 EXPOSE      4040
-#CMD         supervisord -n
+CMD         supervisord -n
 
-# docker build -t dayback .
+# docker build . -t dayback
