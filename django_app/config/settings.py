@@ -55,10 +55,8 @@ AWS_S3_CUSTOM_DOMAIN = 's3.{region}.amazonaws.com/{bucket_name}'.format(
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
-BOWER_DIR = os.path.join(ROOT_DIR, 'bower_components')
 STATICFILES_DIRS = (
     STATIC_DIR,
-    BOWER_DIR,
 )
 
 if STORAGE_S3:
