@@ -11,8 +11,3 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     # permission_classes = (IsAuthenticatedOrCreate, IsOwnerOrReadOnly)
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-
-class GroupViewSet(viewsets.ModelViewSet):
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer

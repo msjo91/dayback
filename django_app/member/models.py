@@ -57,6 +57,7 @@ class MyUser(AbstractBaseUser):
         blank=False,
         default='user unknown'
     )
+    created_datetime = models.DateTimeField(auto_now_add=True)
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)

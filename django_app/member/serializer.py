@@ -27,13 +27,3 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser
         fields = ('url', 'email', 'nickname', 'password')
-
-
-class GroupSerializer(serializers.ModelSerializer):
-    """
-    Serialize user Group.
-    이용자 그룹 직렬화.
-    """
-    class Meta:
-        model = Group
-        fields = ('url', 'name')
