@@ -109,6 +109,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'storages',
+    'corsheaders',
 
     'member.apps.MemberConfig',
     'post.apps.PostConfig',
