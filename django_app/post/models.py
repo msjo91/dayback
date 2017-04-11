@@ -1,8 +1,7 @@
 from django.db import models
 
 
-# Mood question(기분에 대해 질문함)
-class Mood(models.Model):
+class Post(models.Model):
     MOOD_VERY_BAD = 1
     MOOD_BAD = 2
     MOOD_GOOD = 3
@@ -14,13 +13,7 @@ class Mood(models.Model):
         (MOOD_BAD, 'Bad'),
         (MOOD_VERY_BAD, 'VeryBad'),
     )
-
-    author = models.ForeignKey('member.MyUser')
-    created_date = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey('member.MyUser', on_delete=models.CASCADE)
+    created_date = models.DateField(auto_now=True)
     mood_chk = models.IntegerField(choices=MOOD_CHOICE)
     mood_comment = models.CharField(max_length=400)
-
-    class Meta:
-        ordering = (
-            'created_date',
-        )

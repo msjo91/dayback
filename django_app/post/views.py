@@ -1,9 +1,12 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 
-from post.models import Mood
-from post.serializers import PostSerializer
+from .models import Post
+from .serializers import PostSerializer
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Mood.objects.all()
     serializer_class = PostSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return Post.objects.filter(author=self.request.user)

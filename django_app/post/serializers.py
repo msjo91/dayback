@@ -1,9 +1,10 @@
 from rest_framework import serializers
 
-from post.models import Mood
+from .models import Post
 
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Mood
-        fields = ('author', 'id', 'created_date', 'mood_chk', 'mood_comment')
+        model = Post
+        fields = ('id', 'created_date', 'mood_chk', 'mood_comment',)
+        ordering = ('created_date,')

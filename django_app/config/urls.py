@@ -23,8 +23,8 @@ from member import views as member_view
 from post import views as post_view
 
 router = routers.DefaultRouter()
-router.register(r'member', member_view.UserViewSet)
-router.register(r'post', post_view.PostViewSet)
+router.register(r'member', member_view.UserViewSet, 'member')
+router.register(r'post', post_view.PostViewSet, 'post')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
