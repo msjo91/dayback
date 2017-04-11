@@ -25,5 +25,5 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MyUser
-        fields = ('url', 'email', 'nickname', 'password')
-        ordering = ('url',)
+        fields = ('id', 'email', 'nickname', 'created_date')
+        ordering = ('id',)

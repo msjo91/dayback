@@ -13,8 +13,7 @@ import json
 import os
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = os.environ.get('MODE') == 'DEBUG'
-DEBUG = True
+DEBUG = os.environ.get('MODE') == 'DEBUG'
 STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
 DB_RDS = os.environ.get('DB') == 'RDS'
 
