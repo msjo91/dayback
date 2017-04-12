@@ -119,15 +119,24 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'storages',
+    'rest_framework.authtoken',
+    'django_filters',
 
     'member.apps.MemberConfig',
     'post.apps.PostConfig',
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.permissions.IsAdminUser',
-    ],
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
     'PAGE_SIZE': 10
 }
 
