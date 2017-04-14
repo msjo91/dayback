@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework import serializers, exceptions
 from rest_framework.authtoken.models import Token
+from rest_framework.validators import UniqueValidator
 
 User = get_user_model()
 
@@ -24,11 +25,21 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'nickname', 'created_date')
+        fields = ('id', 'email', 'nickname', 'password', 'created_date')
         ordering = ('id',)
 
 
 class SignUpSerializer(serializers.ModelSerializer):
+    # Validate if input email is already registered.
+    # 이메일이 이미 등록되어 있는지 확인한다.
+    email = serializers.EmailField(
+        validators=[
+            UniqueValidator(
+                queryset=User.objects.all()
+            )
+        ]
+    )
+
     password = serializers.CharField(
         style={'input_type': 'password'},
         write_only=True,

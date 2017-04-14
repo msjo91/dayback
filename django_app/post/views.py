@@ -9,13 +9,13 @@ User = get_user_model()
 
 
 class PostFilter(django_filters.rest_framework.FilterSet):
-    created_date_year = django_filters.NumberFilter(name='created_date', lookup_expr='year')
-    created_date_month = django_filters.NumberFilter(name='created_date', lookup_expr='month')
-    created_date_day = django_filters.NumberFilter(name='created_date', lookup_expr='day')
+    year = django_filters.NumberFilter(name='created_date', lookup_expr='year')
+    month = django_filters.NumberFilter(name='created_date', lookup_expr='month')
+    day = django_filters.NumberFilter(name='created_date', lookup_expr='day')
 
     class Meta:
         model = Post
-        fields = ('created_date_year', 'created_date_month', 'created_date_day')
+        fields = ('year', 'month', 'day',)
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -25,12 +25,3 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Post.objects.filter(author=self.request.user)
-
-    # def perform_create(self, validated_data):
-    #     post = Post.objects.create_post(
-    #         author=User.objects.get(self.request.user),
-    #         mood_chk=validated_data['mood_chk'],
-    #         mood_comment=validated_data['mood_comment']
-    #     )
-    #     post.save()
-    #     return post
