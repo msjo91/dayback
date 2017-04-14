@@ -15,7 +15,7 @@ class PostFilter(django_filters.rest_framework.FilterSet):
 
     class Meta:
         model = Post
-        fields = ('year', 'month', 'day')
+        fields = ('year', 'month', 'day',)
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -25,4 +25,3 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Post.objects.filter(author=self.request.user)
-

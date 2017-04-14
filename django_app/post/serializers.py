@@ -7,5 +7,5 @@ from .models import Post
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ('id', 'created_date', 'mood_chk', 'mood_comment')
+        fields = ('id', 'created_date', 'mood_chk', 'mood_comment', 'photo')
         ordering = ('created_date',)

@@ -1,5 +1,7 @@
 from django.db import models
 
+from config import settings
+
 
 class Post(models.Model):
     MOOD_VERY_BAD = 1
@@ -13,7 +15,9 @@ class Post(models.Model):
         (MOOD_BAD, 'Bad'),
         (MOOD_VERY_BAD, 'VeryBad'),
     )
-    author = models.ForeignKey('member.MyUser', on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_date = models.DateField(auto_now=True)
     mood_chk = models.IntegerField(choices=MOOD_CHOICE)
     mood_comment = models.CharField(max_length=400)
+    photo = models.ImageField(upload_to='post', blank=True)
+    is_visible = models.BooleanField(default=True)
