@@ -8,11 +8,12 @@ https://docs.djangoproject.com/en/1.10/topics/auth/customizing/
 """
 from django import forms
 from django.contrib import admin
+from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth.models import Group
 
-from .models import MyUser
+User = get_user_model()
 
 
 class UserCreationForm(forms.ModelForm):
@@ -24,7 +25,7 @@ class UserCreationForm(forms.ModelForm):
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
 
     class Meta:
-        model = MyUser
+        model = User
         fields = ('email', 'nickname')
 
     def clean_password2(self):
@@ -60,7 +61,7 @@ class UserChangeForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField()
 
     class Meta:
-        model = MyUser
+        model = User
         fields = ('email', 'password', 'nickname', 'is_active', 'is_admin')
 
     def clean_password(self):
@@ -102,5 +103,5 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
 
-admin.site.register(MyUser, UserAdmin)
+admin.site.register(User, UserAdmin)
 admin.site.unregister(Group, )
