@@ -19,7 +19,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class SignUpViewSet(viewsets.ViewSet):
-    def create(self, request, format=None):
+    def create(self, request, *args, **kwargs):
         serializer = SignUpSerializer(data=request.data)
 
         if serializer.is_valid():
@@ -46,7 +46,7 @@ class LogInViewSet(viewsets.ViewSet):
 class LogOutViewSet(viewsets.ViewSet):
     permission_classes = (permissions.IsAuthenticated,)
 
-    def create(self, request):
+    def create(self, request, *args, **kwargs):
         try:
             request.auth.delete()
         except (AttributeError, ObjectDoesNotExist):

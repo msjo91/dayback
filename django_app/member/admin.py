@@ -1,7 +1,6 @@
 """
 Integrate custom user model (MyUser) to admin page.
 생성한 커스텀 유저 모델(MyUser)을 admin 페이지에 반영한다.
-
 Referred to Django Documentation v1.10
 공식문서 참조
 https://docs.djangoproject.com/en/1.10/topics/auth/customizing/
@@ -86,7 +85,7 @@ class UserAdmin(BaseUserAdmin):
     list_filter = ('is_admin',)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('nickname',)}),
+        ('Personal info', {'fields': ('nickname', 'profile_photo')}),
         ('Permissions', {'fields': ('is_admin',)}),
     )
 
@@ -95,7 +94,7 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'nickname', 'password1', 'password2')
+            'fields': ('email', 'nickname', 'password1', 'password2', 'profile_photo')
         }),
     )
     search_fields = ('email',)
