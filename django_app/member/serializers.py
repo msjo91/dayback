@@ -25,7 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'nickname', 'password', 'created_date')
+        fields = ('id', 'email', 'nickname', 'password', 'profile_photo', 'created')
         ordering = ('id',)
 
 
@@ -48,12 +48,12 @@ class SignUpSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'nickname', 'password')
+        fields = ('id', 'email', 'nickname', 'password', 'profile_photo')
 
     def create(self, validated_data):
         user = User.objects.create_user(
             email=validated_data['email'],
-            nickname=validated_data['nickname']
+            nickname=validated_data['nickname'],
         )
         user.set_password(validated_data['password'])
         user.save()

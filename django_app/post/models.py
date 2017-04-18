@@ -1,6 +1,9 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 from config import settings
+
+User = get_user_model()
 
 
 class Post(models.Model):
@@ -15,9 +18,9 @@ class Post(models.Model):
         (MOOD_BAD, 'Bad'),
         (MOOD_VERY_BAD, 'VeryBad'),
     )
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    created_date = models.DateField(auto_now=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    created = models.DateField(auto_now_add=True)
     mood = models.IntegerField(choices=MOOD_CHOICE)
-    content = models.TextField(blank=True, null=True, max_length=400)
-    photo = models.ImageField(upload_to='post', blank=True)
+    content = models.TextField(max_length=400, blank=True, null=True)
+    post_photo = models.ImageField(upload_to='post', blank=True, null=True)
     is_visible = models.BooleanField(default=True)

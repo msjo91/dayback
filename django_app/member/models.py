@@ -1,7 +1,6 @@
 """
 Design user information and creation models.
 이용자 정보 및 생성 모델 작성.
-
 Referred to Django Documentation v1.10
 공식문서 참조
 https://docs.djangoproject.com/en/1.10/topics/auth/customizing/
@@ -58,7 +57,10 @@ class MyUser(AbstractBaseUser):
         blank=False,
         default='user unknown'
     )
-    created_date = models.DateTimeField(auto_now=True)
+
+    profile_photo = models.ImageField(upload_to='post', blank=True, null=True)
+
+    created = models.DateTimeField(auto_now_add=True)
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
