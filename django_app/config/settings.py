@@ -14,32 +14,19 @@ import os
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('MODE') == 'DEBUG'
+# DEBUG = True
+STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
+DB_RDS = os.environ.get('DB') == 'RDS'
+
+print('DEBUG: {}'.format(DEBUG))
+print('STORAGE_S3: {}'.format(STORAGE_S3))
+print('DB: {}'.format(DB_RDS))
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT_DIR = os.path.dirname(BASE_DIR)
 
-# Template
-TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
-
-# Media
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.10/howto/static-files/
-
-STATIC_DIR = os.path.join(BASE_DIR, 'static')
-BOWER_DIR = os.path.join(ROOT_DIR, 'bower_components')
-STATICFILES_DIRS = (
-    STATIC_DIR,
-    BOWER_DIR,
-)
-STATIC_URL = '/static/'
-
-# Login redirect
-LOGIN_URL = '/admin/'
-
+# Config
 CONF_DIR = os.path.join(ROOT_DIR, '.conf-secret')
 CONFIG_FILE_COMMON = os.path.join(CONF_DIR, 'settings_common.json')
 if DEBUG:
@@ -49,12 +36,58 @@ else:
 config_common = json.loads(open(CONFIG_FILE_COMMON).read())
 config = json.loads(open(CONFIG_FILE).read())
 
-# common과 현재 사용설정 (local또는 deploy)를 합쳐줌
+# Integrate common and current directory (local or deploy)
 for key, key_dict in config_common.items():
     if not config.get(key):
         config[key] = {}
     for inner_key, inner_key_dict in key_dict.items():
         config[key][inner_key] = inner_key_dict
+
+# AWS
+AWS_ACCESS_KEY_ID = config['aws']['access_key_id']
+AWS_SECRET_ACCESS_KEY = config['aws']['secret_access_key']
+AWS_STORAGE_BUCKET_NAME = config['aws']['s3_storage_bucket_name']
+AWS_S3_CUSTOM_DOMAIN = 's3.{region}.amazonaws.com/{bucket_name}'.format(
+    region=config['aws']['s3_region'],
+    bucket_name=AWS_STORAGE_BUCKET_NAME
+)
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.10/howto/static-files/
+
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = (
+    STATIC_DIR,
+)
+
+if STORAGE_S3:
+    # Static files
+    STATICFILES_STORAGE = 'config.storages.StaticStorage'
+    STATICFILES_LOCATION = 'static'
+    STATIC_URL = 'https://{custom_domain}/{staticfiles_location}/'.format(
+        custom_domain=AWS_S3_CUSTOM_DOMAIN,
+        staticfiles_location=STATICFILES_LOCATION
+    )
+    # Media files
+    DEFAULT_FILE_STORAGE = 'config.storages.MediaStorage'
+    MEDIAFILES_LOCATION = 'media'
+    MEDIA_URL = 'https://{custom_domain}/{mediafiles_location}/'.format(
+        custom_domain=AWS_S3_CUSTOM_DOMAIN,
+        mediafiles_location=MEDIAFILES_LOCATION
+    )
+else:
+    STATIC_ROOT = os.path.join(ROOT_DIR, 'static_root')
+    STATIC_URL = '/static/'
+
+# Template
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+
+# Media
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+# Login redirect
+LOGIN_URL = '/admin/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -64,6 +97,15 @@ for key, key_dict in config_common.items():
 SECRET_KEY = config['django']['secret_key']
 
 ALLOWED_HOSTS = config['django']['allowed_hosts']
+
+CORS_ORIGIN_WHITELIST = (
+    config['whitelist']['dayback'],
+    config['whitelist']['localhost'],
+    config['whitelist']['localeight'],
+    config['whitelist']['localeighty'],
+    config['whitelist']['oneeight'],
+    config['whitelist']['oneeighty']
+)
 
 # Application definition
 
@@ -76,9 +118,31 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'corsheaders',
+    'storages',
+    'rest_framework.authtoken',
+    'django_filters',
+
+    'member.apps.MemberConfig',
+    'post.apps.PostConfig',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.permissions.IsAdminUser',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
+    'PAGE_SIZE': 10
+}
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -99,6 +163,7 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'django.template.context_processors.media',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -111,12 +176,23 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+if DEBUG and DB_RDS:
+    config_db = config['db_rds']
+else:
+    config_db = config['db']
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': config_db['engine'],
+        'NAME': config_db['name'],
+        'USER': config_db['user'],
+        'PASSWORD': config_db['password'],
+        'HOST': config_db['host'],
+        'PORT': config_db['port'],
     }
 }
+
+AUTH_USER_MODEL = 'member.MyUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
