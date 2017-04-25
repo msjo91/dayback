@@ -1,8 +1,6 @@
 import django_filters
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets, permissions
-from rest_framework.decorators import detail_route
-from rest_framework.response import Response
 
 from .models import Post
 from .serializers import PostSerializer
@@ -26,4 +24,5 @@ class PostViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
-        return Post.objects.filter(author=self.request.user)
+        reverse_post = Post.objects.filter(author=self.request.user).order_by('-id')
+        return reverse_post
