@@ -2,4 +2,5 @@ FROM        {from_image}
 MAINTAINER  {maintainer}
 
 {base}
+{base2}
 {extra}
