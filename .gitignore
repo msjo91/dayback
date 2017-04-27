@@ -2,6 +2,7 @@
 
 ### Project Custom ###
 .conf-secret/
+front/
 __dev*/
 *.~
 *.sqlite3

@@ -86,4 +86,5 @@ build_command = 'docker build . -t {imagename} -f {filename}'.format(
     imagename=imagename,
     filename=filename
 )
+print('{}'.format(build_command))
 subprocess.run(build_command, shell=True)
