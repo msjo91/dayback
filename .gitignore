@@ -6,9 +6,11 @@ __dev*/
 *.~
 *.sqlite3
 *.sqlite
+media/
 static_root/
 /static
 _Dockerfile*
+Dockerfile.*
 **/django_app/static/css
 dayback_env
 
