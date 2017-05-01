@@ -12,10 +12,11 @@ class PostFilter(django_filters.rest_framework.FilterSet):
     year = django_filters.NumberFilter(name='created', lookup_expr='year')
     month = django_filters.NumberFilter(name='created', lookup_expr='month')
     day = django_filters.NumberFilter(name='created', lookup_expr='day')
+    weekday = django_filters.NumberFilter(name='created', lookup_expr='week_day')
 
     class Meta:
         model = Post
-        fields = ('year', 'month', 'day',)
+        fields = ('year', 'month', 'day', 'weekday')
 
 
 class PostViewSet(viewsets.ModelViewSet):

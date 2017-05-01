@@ -30,7 +30,7 @@ router.register(r'post', post_view.PostViewSet, 'post')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'', include(router.urls)),
+    url(r'^api/', include(router.urls)),
     # URL for authentication
     # 인증처리를 위한 URL
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
